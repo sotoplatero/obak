@@ -191,7 +191,10 @@ log_info "Creating final backup.zip..."
 (
     cd "$TEMP_BACKUP_DIR" || error_exit "Cannot access temporary backup directory."
     zip -rq "../backup.zip" .
-) || error_exit "Failed to create ZIP archive."
+) &
+PROCESS_PID=$!
+start_spinner "Creating backup.zip..." "$PROCESS_PID"
+wait "$PROCESS_PID" || error_exit "Failed to create ZIP archive."
 
 # Clean temp folder
 rm -rf "$TEMP_BACKUP_DIR"
